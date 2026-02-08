@@ -9,45 +9,51 @@ Based on the patterns used by Boris Cherny (Claude Code's creator at Anthropic) 
 This template sets up a full autonomous Claude Code environment for a mixed-stack project (Next.js 14 + TypeScript, Python/FastAPI, Node.js services):
 
 ### Configuration files
-| File | Purpose |
-|------|---------|
-| `CLAUDE.md` | Semantic anchor — project conventions, commands, code style, critical dev rules |
-| `.claude/settings.json` | Master config — permissions, hooks, plugin enablement |
-| `.mcp.json` | MCP server configuration (GitHub, Sentry, dbhub, Context7) |
-| `.gitignore` | Ignores local settings and Ralph Wiggum state files |
+
+| File                    | Purpose                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| `CLAUDE.md`             | Semantic anchor — project conventions, commands, code style, critical dev rules |
+| `.claude/settings.json` | Master config — permissions, hooks, plugin enablement                           |
+| `.mcp.json`             | MCP server configuration (GitHub, Sentry, dbhub, Context7)                      |
+| `.gitignore`            | Ignores local settings and Ralph loop state files                               |
 
 ### Hooks (`.claude/hooks/`)
-| Hook | Trigger | Purpose |
-|------|---------|---------|
-| `block-dangerous-git.sh` | PreToolUse (Bash) | Blocks force push, reset --hard, destructive rm -rf |
-| `protect-files.sh` | PreToolUse (Edit/Write) | Guards .env, lockfiles, migrations, docker-compose.prod.yml |
-| `auto-format.sh` | PostToolUse (Edit/Write) | Runs Prettier on TS/JS, Black + isort on Python |
-| `auto-test.sh` | PostToolUse (Edit/Write) | Runs matching test file after code edits |
-| `stop-validation.sh` | Stop | Blocks Claude from stopping if tests are failing |
+
+| Hook                     | Trigger                  | Purpose                                                     |
+| ------------------------ | ------------------------ | ----------------------------------------------------------- |
+| `block-dangerous-git.sh` | PreToolUse (Bash)        | Blocks force push, reset --hard, destructive rm -rf         |
+| `protect-files.sh`       | PreToolUse (Edit/Write)  | Guards .env, lockfiles, migrations, docker-compose.prod.yml |
+| `auto-format.sh`         | PostToolUse (Edit/Write) | Runs Prettier on TS/JS, Black + isort on Python             |
+| `auto-test.sh`           | PostToolUse (Edit/Write) | Runs matching test file after code edits                    |
+| `stop-validation.sh`     | Stop                     | Blocks Claude from stopping if tests are failing            |
 
 ### Commands (`.claude/commands/`)
-| Command | Description |
-|---------|-------------|
+
+| Command     | Description                                                              |
+| ----------- | ------------------------------------------------------------------------ |
 | `/todo-all` | Autonomous task loop — reads `.llm/todo.md`, launches subagents per task |
-| `/commit` | Conventional commit workflow with emoji prefixes |
-| `/deploy` | VPS deployment with 6 pre-flight checks |
+| `/commit`   | Conventional commit workflow with emoji prefixes                         |
+| `/deploy`   | VPS deployment with 6 pre-flight checks                                  |
 
 ### Agents, Skills & Rules
-| File | Description |
-|------|-------------|
-| `.claude/agents/do-todo.md` | Sonnet-based single-task executor subagent |
-| `.claude/skills/tdd-integration/SKILL.md` | TDD Red-Green-Refactor cycle enforcement |
-| `.claude/rules/typescript.md` | Path-scoped TypeScript rules (src/app directories) |
-| `.claude/rules/python.md` | Path-scoped Python rules (api/services directories) |
+
+| File                                      | Description                                         |
+| ----------------------------------------- | --------------------------------------------------- |
+| `.claude/agents/do-todo.md`               | Sonnet-based single-task executor subagent          |
+| `.claude/skills/tdd-integration/SKILL.md` | TDD Red-Green-Refactor cycle enforcement            |
+| `.claude/rules/typescript.md`             | Path-scoped TypeScript rules (src/app directories)  |
+| `.claude/rules/python.md`                 | Path-scoped Python rules (api/services directories) |
 
 ### Task management
-| File | Description |
-|------|-------------|
+
+| File           | Description                                   |
+| -------------- | --------------------------------------------- |
 | `.llm/todo.md` | Sprint task list template for autonomous runs |
 
 ### CI/CD
-| File | Description |
-|------|-------------|
+
+| File                                  | Description                                      |
+| ------------------------------------- | ------------------------------------------------ |
 | `.github/workflows/claude-review.yml` | GitHub Actions PR review with claude-code-action |
 
 ## Quick start
@@ -71,19 +77,21 @@ claude
 
 After cloning and customizing, run these commands inside a Claude Code session:
 
-1. **Install the Ralph Wiggum plugin** for hours-long autonomous sessions:
+1. **Install the Ralph Loop plugin** for hours-long autonomous sessions:
+
    ```
-   /plugin install ralph-wiggum@claude-plugins-official
+   /plugin install ralph-loop@claude-plugins-official
    ```
 
 2. **Connect GitHub** for CI/CD integration:
+
    ```
    /install-github-app
    ```
 
-3. **Start an autonomous run** with the Ralph Wiggum loop:
+3. **Start an autonomous run** with the Ralph loop:
    ```
-   /ralph-wiggum:ralph-loop "Go through .llm/todo.md step by step. For each task: write tests first, implement minimally, run tests, commit with conventional message, check off the task. Output <promise>DONE</promise> when complete." --max-iterations 30 --completion-promise "DONE"
+   /ralph-loop "Go through .llm/todo.md step by step. For each task: write tests first, implement minimally, run tests, commit with conventional message, check off the task. Output <promise>DONE</promise> when complete." --max-iterations 30 --completion-promise "DONE"
    ```
 
 ## Directory structure
