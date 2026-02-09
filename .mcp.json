@@ -10,10 +10,6 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@context7/mcp-server"]
-    },
-    "db": {
-      "command": "npx",
-      "args": ["-y", "@bytebase/dbhub", "--dsn", "${DATABASE_URL}"]
     }
   }
 }
