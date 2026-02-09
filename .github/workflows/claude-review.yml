@@ -1,0 +1,25 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          review_comment: |
+            Review this PR for:
+            1. Does it match the sprint tasks in .llm/todo.md?
+            2. Are there tests for new functionality?
+            3. Are conventional commits used?
+            4. Any obvious architectural drift from CLAUDE.md rules?
+            Keep the review concise. Focus on behavior, not style.

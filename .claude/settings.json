@@ -1,0 +1,153 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx *)",
+      "Bash(cd api && *)",
+      "Bash(cd src && *)",
+      "Bash(cd app && *)",
+      "Bash(cd tests && *)",
+      "Bash(cd infra && *)",
+      "Bash(cd dashboard && *)",
+      "Bash(cd docs && *)",
+      "Bash(pytest *)",
+      "Bash(python -m pytest *)",
+      "Bash(python -m black *)",
+      "Bash(python -m isort *)",
+      "Bash(pip install *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git status)",
+      "Bash(git stash *)",
+      "Bash(git push origin *)",
+      "Bash(gh pr *)",
+      "Bash(docker compose *)",
+      "Bash(tree *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(curl *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(chmod +x *)",
+      "Bash(**/ralph-wiggum/**)",
+      "Bash(**/ralph/**)",
+      "Read(**)",
+      "Write(src/**)",
+      "Write(app/**)",
+      "Write(api/**)",
+      "Write(services/**)",
+      "Write(tests/**)",
+      "Write(infra/**)",
+      "Write(docs/**)",
+      "Write(dashboard/**)",
+      "Write(.llm/**)",
+      "Write(.github/**)",
+      "Edit(src/**)",
+      "Edit(app/**)",
+      "Edit(api/**)",
+      "Edit(services/**)",
+      "Edit(tests/**)",
+      "Edit(infra/**)",
+      "Edit(docs/**)",
+      "Edit(dashboard/**)",
+      "Edit(.llm/**)",
+      "Edit(.github/**)",
+      "MultiEdit(src/**)",
+      "MultiEdit(app/**)",
+      "MultiEdit(api/**)",
+      "MultiEdit(services/**)",
+      "MultiEdit(tests/**)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "TodoRead",
+      "TodoWrite",
+      "Task"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push *--force*)",
+      "Bash(git push *-f *)",
+      "Bash(git push *origin main*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r /*)",
+      "Bash(chmod 777*)",
+      "Bash(sudo *)",
+      "Bash(curl *| bash*)",
+      "Bash(curl *| sh*)",
+      "Write(.env)",
+      "Write(.env.*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/secrets/**)",
+      "Write(.scenarios/**)",
+      "Write(.validation/**)",
+      "Write(.factory/**)",
+      "Write(package-lock.json)",
+      "Write(pnpm-lock.yaml)",
+      "Edit(.env*)",
+      "Edit(.scenarios/**)",
+      "Edit(.validation/**)",
+      "Edit(.factory/**)",
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "matcher": "Bash",
+        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous-git.sh",
+        "timeout": 5000
+      },
+      {
+        "type": "command",
+        "matcher": "Edit|Write",
+        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/protect-files.sh",
+        "timeout": 5000
+      }
+    ],
+    "PostToolUse": [
+      {
+        "type": "command",
+        "matcher": "Edit|Write",
+        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh",
+        "timeout": 30000
+      },
+      {
+        "type": "command",
+        "matcher": "Edit|Write",
+        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-test.sh",
+        "timeout": 120000
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stop-validation.sh",
+        "timeout": 120000
+      },
+      {
+        "type": "command",
+        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/drift-check.sh",
+        "timeout": 5000
+      }
+    ]
+  },
+  "plugins": {
+    "ralph-wiggum": {
+      "enabled": true,
+      "source": "anthropics/claude-code"
+    }
+  }
+}

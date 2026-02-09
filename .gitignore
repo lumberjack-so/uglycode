@@ -1,0 +1,44 @@
+# Claude Code local state
+.claude/settings.local.json
+.claude/ralph-loop.local.md
+
+# Factory runtime
+.validation/current-judge-prompt.md
+.llm/stage-context.md
+.factory/last-scenario-prompt.md
+.factory/last-sprint-prompt.md
+.factory/sprints/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+htmlcov/
+.coverage
