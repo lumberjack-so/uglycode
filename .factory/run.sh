@@ -1,6 +1,6 @@
 #!/bin/bash
 # Software Factory — PRD In, Software Out
-# Usage: .factory/run.sh <prd-file> [start-sprint]
+# Usage: .factory/run.sh <prd-file> [start-sprint] [--manual]
 #
 # This is the only command you run. Everything else is automated:
 # 1. PRD → Sprint breakdown (todo.md files for each sprint)
@@ -8,11 +8,19 @@
 # 3. CLAUDE.md updated with sprint-specific context
 # 4. Factory loop: code → validate → score → continue/stop
 # 5. Sprint transition: PR, summary, reset, next sprint
+#
+# Pass --manual to use interactive mode (paste commands, enter scores manually).
+# Default is auto mode: coding agent and judge run via claude CLI.
 
 set -e
 
-PRD_FILE=${1:?"Usage: .factory/run.sh <prd-file> [start-sprint]"}
+PRD_FILE=${1:?"Usage: .factory/run.sh <prd-file> [start-sprint] [--manual]"}
 START_SPRINT=${2:-0}
+
+MANUAL_FLAG=""
+for arg in "$@"; do
+    if [ "$arg" = "--manual" ]; then MANUAL_FLAG="--manual"; fi
+done
 
 if [ ! -f "$PRD_FILE" ]; then
     echo "Error: PRD file not found: ${PRD_FILE}"
@@ -22,6 +30,11 @@ fi
 echo "========================================================"
 echo "  SOFTWARE FACTORY"
 echo "  Input: ${PRD_FILE}"
+if [ -n "$MANUAL_FLAG" ]; then
+    echo "  Mode: MANUAL (interactive)"
+else
+    echo "  Mode: AUTO (claude CLI)"
+fi
 echo "========================================================"
 echo ""
 
@@ -80,13 +93,13 @@ while [ $CURRENT_SPRINT -lt $TOTAL_SPRINTS ]; do
     # 2d. Run the factory orchestrator
     echo "Launching factory for Sprint ${CURRENT_SPRINT}..."
     echo ""
-    bash .factory/orchestrate.sh "$CURRENT_SPRINT"
+    bash .factory/orchestrate.sh "$CURRENT_SPRINT" 3 $MANUAL_FLAG
     RESULT=$?
 
     if [ $RESULT -ne 0 ]; then
         echo ""
         echo "Sprint ${CURRENT_SPRINT} stopped. Fix issues then resume:"
-        echo "   .factory/run.sh ${PRD_FILE} ${CURRENT_SPRINT}"
+        echo "   .factory/run.sh ${PRD_FILE} ${CURRENT_SPRINT} ${MANUAL_FLAG}"
         exit 1
     fi
 
